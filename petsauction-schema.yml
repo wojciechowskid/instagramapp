@@ -1,0 +1,1128 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/users/:
+    get:
+      operationId: listAuctionUsers
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    email:
+                      type: string
+                      format: email
+                      maxLength: 254
+                    username:
+                      type: string
+                      readOnly: true
+                      description: Required. 150 characters or fewer. Letters, digits
+                        and @/./+/-/_ only.
+                    balance:
+                      type: number
+                      multipleOf: 0.01
+                      maximum: 10000000
+                      minimum: -10000000
+                      readOnly: true
+          description: ''
+    post:
+      operationId: createAuctionUser
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id001
+              properties:
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+                username:
+                  type: string
+                  description: Required. 150 characters or fewer. Letters, digits
+                    and @/./+/-/_ only.
+                  pattern: ^[\w.@+-]+\Z
+                  maxLength: 150
+                password:
+                  type: string
+                  writeOnly: true
+                  maxLength: 128
+              required:
+              - username
+              - password
+          application/x-www-form-urlencoded:
+            schema: *id001
+          multipart/form-data:
+            schema: *id001
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 254
+                  username:
+                    type: string
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                    pattern: ^[\w.@+-]+\Z
+                    maxLength: 150
+                required:
+                - username
+          description: ''
+  /api/users/{id}/:
+    get:
+      operationId: retrieveAuctionUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 254
+                  username:
+                    type: string
+                    readOnly: true
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                  balance:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                    readOnly: true
+          description: ''
+    put:
+      operationId: updateAuctionUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id002
+              properties:
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+          application/x-www-form-urlencoded:
+            schema: *id002
+          multipart/form-data:
+            schema: *id002
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 254
+                  username:
+                    type: string
+                    readOnly: true
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                  balance:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                    readOnly: true
+          description: ''
+    patch:
+      operationId: partial_updateAuctionUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id003
+              properties:
+                email:
+                  type: string
+                  format: email
+                  maxLength: 254
+          application/x-www-form-urlencoded:
+            schema: *id003
+          multipart/form-data:
+            schema: *id003
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  email:
+                    type: string
+                    format: email
+                    maxLength: 254
+                  username:
+                    type: string
+                    readOnly: true
+                    description: Required. 150 characters or fewer. Letters, digits
+                      and @/./+/-/_ only.
+                  balance:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                    readOnly: true
+          description: ''
+    delete:
+      operationId: destroyAuctionUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/pets/:
+    get:
+      operationId: listPets
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    pet_type:
+                      enum:
+                      - HG
+                      - CT
+                    name:
+                      type: string
+                      maxLength: 255
+                    breed:
+                      type: string
+                      maxLength: 255
+                    owner:
+                      type: string
+                      readOnly: true
+                  required:
+                  - pet_type
+                  - name
+                  - breed
+          description: ''
+    post:
+      operationId: createPet
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id004
+              properties:
+                pet_type:
+                  enum:
+                  - HG
+                  - CT
+                name:
+                  type: string
+                  maxLength: 255
+                breed:
+                  type: string
+                  maxLength: 255
+              required:
+              - pet_type
+              - name
+              - breed
+          application/x-www-form-urlencoded:
+            schema: *id004
+          multipart/form-data:
+            schema: *id004
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  pet_type:
+                    enum:
+                    - HG
+                    - CT
+                  name:
+                    type: string
+                    maxLength: 255
+                  breed:
+                    type: string
+                    maxLength: 255
+                  owner:
+                    type: string
+                    readOnly: true
+                required:
+                - pet_type
+                - name
+                - breed
+          description: ''
+  /api/pets/{id}/:
+    get:
+      operationId: retrievePet
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this pet.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  pet_type:
+                    enum:
+                    - HG
+                    - CT
+                  name:
+                    type: string
+                    maxLength: 255
+                  breed:
+                    type: string
+                    maxLength: 255
+                  owner:
+                    type: string
+                    readOnly: true
+                required:
+                - pet_type
+                - name
+                - breed
+          description: ''
+    put:
+      operationId: updatePet
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this pet.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id005
+              properties:
+                pet_type:
+                  enum:
+                  - HG
+                  - CT
+                name:
+                  type: string
+                  maxLength: 255
+                breed:
+                  type: string
+                  maxLength: 255
+              required:
+              - pet_type
+              - name
+              - breed
+          application/x-www-form-urlencoded:
+            schema: *id005
+          multipart/form-data:
+            schema: *id005
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  pet_type:
+                    enum:
+                    - HG
+                    - CT
+                  name:
+                    type: string
+                    maxLength: 255
+                  breed:
+                    type: string
+                    maxLength: 255
+                  owner:
+                    type: string
+                    readOnly: true
+                required:
+                - pet_type
+                - name
+                - breed
+          description: ''
+    patch:
+      operationId: partial_updatePet
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this pet.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id006
+              properties:
+                pet_type:
+                  enum:
+                  - HG
+                  - CT
+                name:
+                  type: string
+                  maxLength: 255
+                breed:
+                  type: string
+                  maxLength: 255
+          application/x-www-form-urlencoded:
+            schema: *id006
+          multipart/form-data:
+            schema: *id006
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  pet_type:
+                    enum:
+                    - HG
+                    - CT
+                  name:
+                    type: string
+                    maxLength: 255
+                  breed:
+                    type: string
+                    maxLength: 255
+                  owner:
+                    type: string
+                    readOnly: true
+                required:
+                - pet_type
+                - name
+                - breed
+          description: ''
+    delete:
+      operationId: destroyPet
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this pet.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/lots/:
+    get:
+      operationId: listLots
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    pet:
+                      type: integer
+                    price:
+                      type: number
+                      multipleOf: 0.01
+                      maximum: 10000000
+                      minimum: -10000000
+                    owner:
+                      type: string
+                      readOnly: true
+                    status:
+                      enum:
+                      - AC
+                      - CD
+                      readOnly: true
+                  required:
+                  - pet
+          description: ''
+    post:
+      operationId: createLot
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id007
+              properties:
+                pet:
+                  type: integer
+                price:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 10000000
+                  minimum: -10000000
+              required:
+              - pet
+          application/x-www-form-urlencoded:
+            schema: *id007
+          multipart/form-data:
+            schema: *id007
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  pet:
+                    type: integer
+                  price:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                  owner:
+                    type: string
+                    readOnly: true
+                  status:
+                    enum:
+                    - AC
+                    - CD
+                    readOnly: true
+                required:
+                - pet
+          description: ''
+  /api/lots/{id}/:
+    get:
+      operationId: retrieveLot
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this lot.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  pet:
+                    type: integer
+                  price:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                  owner:
+                    type: string
+                    readOnly: true
+                  status:
+                    enum:
+                    - AC
+                    - CD
+                    readOnly: true
+                required:
+                - pet
+          description: ''
+    put:
+      operationId: updateLot
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this lot.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id008
+              properties:
+                pet:
+                  type: integer
+                price:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 10000000
+                  minimum: -10000000
+              required:
+              - pet
+          application/x-www-form-urlencoded:
+            schema: *id008
+          multipart/form-data:
+            schema: *id008
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  pet:
+                    type: integer
+                  price:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                  owner:
+                    type: string
+                    readOnly: true
+                  status:
+                    enum:
+                    - AC
+                    - CD
+                    readOnly: true
+                required:
+                - pet
+          description: ''
+    patch:
+      operationId: partial_updateLot
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this lot.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id009
+              properties:
+                pet:
+                  type: integer
+                price:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 10000000
+                  minimum: -10000000
+          application/x-www-form-urlencoded:
+            schema: *id009
+          multipart/form-data:
+            schema: *id009
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  pet:
+                    type: integer
+                  price:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                  owner:
+                    type: string
+                    readOnly: true
+                  status:
+                    enum:
+                    - AC
+                    - CD
+                    readOnly: true
+                required:
+                - pet
+          description: ''
+    delete:
+      operationId: destroyLot
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this lot.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/lots/{lot_id}/bids/:
+    get:
+      operationId: listBids
+      description: ''
+      parameters:
+      - name: lot_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    lot:
+                      type: string
+                      readOnly: true
+                    amount:
+                      type: number
+                      multipleOf: 0.01
+                      maximum: 10000000
+                      minimum: -10000000
+                    author:
+                      type: string
+                      readOnly: true
+                    status:
+                      enum:
+                      - NW
+                      - AC
+                      readOnly: true
+          description: ''
+    post:
+      operationId: createBid
+      description: ''
+      parameters:
+      - name: lot_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id010
+              properties:
+                amount:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 10000000
+                  minimum: -10000000
+          application/x-www-form-urlencoded:
+            schema: *id010
+          multipart/form-data:
+            schema: *id010
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  lot:
+                    type: string
+                    readOnly: true
+                  amount:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                  author:
+                    type: string
+                    readOnly: true
+                  status:
+                    enum:
+                    - NW
+                    - AC
+                    readOnly: true
+          description: ''
+  /api/lots/{lot_id}/bids/{id}/:
+    get:
+      operationId: retrieveBid
+      description: ''
+      parameters:
+      - name: lot_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this bid.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  lot:
+                    type: string
+                    readOnly: true
+                  amount:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                  author:
+                    type: string
+                    readOnly: true
+                  status:
+                    enum:
+                    - NW
+                    - AC
+                    readOnly: true
+          description: ''
+    put:
+      operationId: updateBid
+      description: ''
+      parameters:
+      - name: lot_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this bid.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id011
+              properties:
+                amount:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 10000000
+                  minimum: -10000000
+          application/x-www-form-urlencoded:
+            schema: *id011
+          multipart/form-data:
+            schema: *id011
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  lot:
+                    type: string
+                    readOnly: true
+                  amount:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                  author:
+                    type: string
+                    readOnly: true
+                  status:
+                    enum:
+                    - NW
+                    - AC
+                    readOnly: true
+          description: ''
+    patch:
+      operationId: partial_updateBid
+      description: ''
+      parameters:
+      - name: lot_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this bid.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id012
+              properties:
+                amount:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 10000000
+                  minimum: -10000000
+          application/x-www-form-urlencoded:
+            schema: *id012
+          multipart/form-data:
+            schema: *id012
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  lot:
+                    type: string
+                    readOnly: true
+                  amount:
+                    type: number
+                    multipleOf: 0.01
+                    maximum: 10000000
+                    minimum: -10000000
+                  author:
+                    type: string
+                    readOnly: true
+                  status:
+                    enum:
+                    - NW
+                    - AC
+                    readOnly: true
+          description: ''
+    delete:
+      operationId: destroyBid
+      description: ''
+      parameters:
+      - name: lot_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this bid.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/auth-token/:
+    post:
+      operationId: CreateObtainAuthToken
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+  /api/lots/{lot_id}/bids/{id}/accept_bid/:
+    post:
+      operationId: accept_bidBid
+      description: ''
+      parameters:
+      - name: lot_id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this bid.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id013
+              properties:
+                status:
+                  enum:
+                  - NW
+                  - AC
+          application/x-www-form-urlencoded:
+            schema: *id013
+          multipart/form-data:
+            schema: *id013
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  status:
+                    enum:
+                    - NW
+                    - AC
+          description: ''
+  /api/users/{id}/balance/:
+    put:
+      operationId: UpdateAuctionUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id014
+              properties:
+                balance:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 10000000
+                  minimum: -10000000
+                  writeOnly: true
+          application/x-www-form-urlencoded:
+            schema: *id014
+          multipart/form-data:
+            schema: *id014
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties: {}
+          description: ''
+    patch:
+      operationId: PartialUpdateAuctionUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id015
+              properties:
+                balance:
+                  type: number
+                  multipleOf: 0.01
+                  maximum: 10000000
+                  minimum: -10000000
+                  writeOnly: true
+          application/x-www-form-urlencoded:
+            schema: *id015
+          multipart/form-data:
+            schema: *id015
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties: {}
+          description: ''
+  /api/users/{id}/password/:
+    put:
+      operationId: UpdateUpdatePassword
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: ''
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: {}
+          description: ''
