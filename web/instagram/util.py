@@ -1,5 +1,6 @@
 import requests
 from django.conf import settings
+import base64, hmac, json, hashlib
 
 
 class Instagram:
@@ -37,17 +38,44 @@ class Instagram:
             "access_token": token
         })
 
-        imgs = media.json()['data'][:length]
+        imgs = media.json().get('data')
+        if not imgs:
+            return imgs
+        imgs = imgs[:length]
         albums = filter(lambda img: img['media_type'] == 'CAROUSEL_ALBUM', imgs)
         imgs = list(filter(lambda img: img['media_type'] != 'CAROUSEL_ALBUM', imgs))
 
         for album in albums:
-            uri = settings.INSTAGRAM_ROOT_URI + '/' + album['id'] + '/children'
+            uri = settings.INSTAGRAM_ROOT_URI + '/' + album.get('id') + '/children'
             child_imgs = requests.get(uri, {
                 "fields": "id,media_url,timestamp,media_type",
                 "access_token": token
             })
-            imgs += child_imgs.json()['data']
+            imgs += child_imgs.json().get('data')
 
         imgs = sorted(imgs, key=lambda img: img['timestamp'], reverse=True)
         return imgs[:length]
+
+    def parse_signed_request(self, signed_request):
+        secret = settings.INSTAGRAM_SECRET
+
+        if not signed_request:
+            raise ValueError('Ivalid Signed Request!')
+
+        encoded_sig, payload = signed_request.split('.', 2)
+
+        sig = self.base64_url_decode(encoded_sig)
+        data = json.loads(self.base64_url_decode(payload))
+
+        if data.get('algorithm').upper() != 'HMAC-SHA256':
+            raise ValueError('Unsupported algorithm')
+
+        expected_sig = hmac.new(secret, msg=payload, digestmod=hashlib.sha256).digest()
+
+        if sig != expected_sig:
+            raise ValueError('Bad Signed JSON signature!')
+
+    def base64_url_decode(self, inp):
+        padding_factor = (4 - len(inp) % 4)
+        inp += "="*padding_factor
+        return base64.urlsafe_b64decode(inp)

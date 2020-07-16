@@ -1,3 +1,6 @@
-- API scheme is presented in petsauction-schema.yml
+- API scheme is presented in instagramapp-schema.yml
+- You need to create a facebook app for Instagram Basic Display and specify the corresponding App Id and Secret in `.env`
+- Add your user to the testers of the app
 - Run `docker-compose up --build` in root folder to launch the docker containers. The backend should be available at http://localhost:8000/
-- First of all one needs to create a user at /api/users/ and get token at /api/auth-token/ -- the application uses token authentication for all post, put, patch and delete actions
+- Create a user at /api/users/
+- Go to /auth-window and follow the link; accept instagram prompt and get the auth code from the url, you are redirected after the approve. Use this auth code to connect a user to instagram at `/api/users/<id>/instagram`

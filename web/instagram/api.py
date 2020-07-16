@@ -6,8 +6,9 @@ from .models import InstagramAccount
 from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
+from django.conf import settings
 from .util import Instagram
-# from rest_framework.decorators import action
+from rest_framework.decorators import api_view
 
 
 class CreateInstagramAccountViewSet(mixins.CreateModelMixin,
@@ -66,3 +67,24 @@ class CreateInstagramAccountViewSet(mixins.CreateModelMixin,
         self.perform_destroy(instance)
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['POST'])
+def delete_data(request):
+    if request.method == 'POST':
+        signed_data = request.data.get('signed_data')
+
+        inst = Instagram()
+        try:
+            data = inst.parse_signed_request(signed_request)
+            user_id = data.get('user_id')
+            accounts = InstagramAccount.objects.filter(inst_user_id=user_id)
+            for account in accounts:
+                account.delete()
+        except (ValueError, KeyError) as err:
+            return Response({'error': err},
+                            status=status.HTTP_400_BAD_REQUEST)
+        except InstagramAccount.DoesNotExists:
+            pass
+        return Response({'url': 'http://deleted.com',
+                         'confirmation_code': 'the user data deleted'})
+    return Response({'error': 'Unsupported method'},
+                    status=status.HTTP_400_BAD_REQUEST)

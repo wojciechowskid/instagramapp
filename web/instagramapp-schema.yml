@@ -1,0 +1,312 @@
+openapi: 3.0.2
+info:
+  title: ''
+  version: ''
+paths:
+  /api/users/{user_id}/instagram/:
+    get:
+      operationId: listInstagramAccounts
+      description: ''
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: A unique value identifying this instagram account.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    auth_code:
+                      type: string
+                      maxLength: 255
+                  required:
+                  - auth_code
+          description: ''
+    post:
+      operationId: createInstagramAccount
+      description: ''
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: A unique value identifying this instagram account.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id001
+              properties:
+                auth_code:
+                  type: string
+                  maxLength: 255
+              required:
+              - auth_code
+          application/x-www-form-urlencoded:
+            schema: *id001
+          multipart/form-data:
+            schema: *id001
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  auth_code:
+                    type: string
+                    maxLength: 255
+                required:
+                - auth_code
+          description: ''
+    delete:
+      operationId: destroyInstagramAccount
+      description: ''
+      parameters:
+      - name: user_id
+        in: path
+        required: true
+        description: A unique value identifying this instagram account.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''
+  /api/users/:
+    get:
+      operationId: listUsers
+      description: ''
+      parameters: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  properties:
+                    id:
+                      type: integer
+                      readOnly: true
+                    username:
+                      type: string
+                      nullable: true
+                      maxLength: 255
+                    age:
+                      type: integer
+                      maximum: 2147483647
+                      minimum: 0
+                    active:
+                      type: boolean
+                  required:
+                  - age
+                  - active
+          description: ''
+    post:
+      operationId: createUser
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema: &id002
+              properties:
+                username:
+                  type: string
+                  nullable: true
+                  maxLength: 255
+                age:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+                active:
+                  type: boolean
+              required:
+              - age
+              - active
+          application/x-www-form-urlencoded:
+            schema: *id002
+          multipart/form-data:
+            schema: *id002
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    nullable: true
+                    maxLength: 255
+                  age:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                  active:
+                    type: boolean
+                required:
+                - age
+                - active
+          description: ''
+  /api/users/{id}/:
+    get:
+      operationId: retrieveUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    nullable: true
+                    maxLength: 255
+                  age:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                  active:
+                    type: boolean
+                required:
+                - age
+                - active
+          description: ''
+    put:
+      operationId: updateUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id003
+              properties:
+                username:
+                  type: string
+                  nullable: true
+                  maxLength: 255
+                age:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+                active:
+                  type: boolean
+              required:
+              - age
+              - active
+          application/x-www-form-urlencoded:
+            schema: *id003
+          multipart/form-data:
+            schema: *id003
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    nullable: true
+                    maxLength: 255
+                  age:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                  active:
+                    type: boolean
+                required:
+                - age
+                - active
+          description: ''
+    patch:
+      operationId: partial_updateUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/json:
+            schema: &id004
+              properties:
+                username:
+                  type: string
+                  nullable: true
+                  maxLength: 255
+                age:
+                  type: integer
+                  maximum: 2147483647
+                  minimum: 0
+                active:
+                  type: boolean
+          application/x-www-form-urlencoded:
+            schema: *id004
+          multipart/form-data:
+            schema: *id004
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: integer
+                    readOnly: true
+                  username:
+                    type: string
+                    nullable: true
+                    maxLength: 255
+                  age:
+                    type: integer
+                    maximum: 2147483647
+                    minimum: 0
+                  active:
+                    type: boolean
+                required:
+                - age
+                - active
+          description: ''
+    delete:
+      operationId: destroyUser
+      description: ''
+      parameters:
+      - name: id
+        in: path
+        required: true
+        description: A unique integer value identifying this user.
+        schema:
+          type: string
+      responses:
+        '204':
+          description: ''

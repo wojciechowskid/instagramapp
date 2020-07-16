@@ -19,7 +19,6 @@ from instagram import views
 from rest_framework.routers import DefaultRouter
 from users.api import (UserViewSet)
 from instagram.api import CreateInstagramAccountViewSet
-import debug_toolbar
 
 
 router = DefaultRouter()
@@ -36,5 +35,4 @@ urlpatterns = [
     path('auth-window/', views.view),
     path('api/users/<int:user_id>/instagram/', instagram_view),
     path('', include(router.urls)),
-    path('__debug__/', include(debug_toolbar.urls)),
 ]
