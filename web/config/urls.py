@@ -24,11 +24,17 @@ import debug_toolbar
 
 router = DefaultRouter()
 router.register(r'api/users', UserViewSet)
-router.register(r'api/users/(?P<user_id>\d+)/instagram', CreateInstagramAccountViewSet)
+
+instagram_view = CreateInstagramAccountViewSet.as_view({
+    'get': 'list',
+    'post': 'create',
+    'delete': 'destroy'
+})
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth-window/', views.view),
+    path('api/users/<int:user_id>/instagram/', instagram_view),
     path('', include(router.urls)),
     path('__debug__/', include(debug_toolbar.urls)),
 ]

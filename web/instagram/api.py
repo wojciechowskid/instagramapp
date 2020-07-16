@@ -7,10 +7,12 @@ from datetime import timedelta
 from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from .util import Instagram
+# from rest_framework.decorators import action
 
 
 class CreateInstagramAccountViewSet(mixins.CreateModelMixin,
                                     mixins.ListModelMixin,
+                                    mixins.DestroyModelMixin,
                                     viewsets.GenericViewSet):
     queryset = InstagramAccount.objects.all()
     serializer_class = AuthCodeSerializer
@@ -49,10 +51,18 @@ class CreateInstagramAccountViewSet(mixins.CreateModelMixin,
             return Response(model_serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
-    def list(self, request, user_id):
+    def list(self, request, *args, **kwrags):
+        user_id = self.kwargs.get('user_id')
         account = get_object_or_404(InstagramAccount, pk=user_id)
         token = account.long_lived_token
         inst = Instagram()
         imgs = inst.get_recent_images(token)
 
         return Response(imgs, status=status.HTTP_200_OK)
+
+    def destroy(self, request, *args, **kwargs):
+        user_id = self.kwargs.get('user_id')
+        instance = get_object_or_404(InstagramAccount, pk=user_id)
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
