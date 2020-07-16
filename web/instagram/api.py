@@ -1,15 +1,16 @@
 from rest_framework.decorators import api_view
 from .serializers import AuthCodeSerializer, InstagramAccountSerializer
-import requests
-from django.conf import settings
 from rest_framework.response import Response
 from rest_framework import status, mixins, viewsets
 from .models import InstagramAccount
 from datetime import timedelta
 from django.utils import timezone
+from django.shortcuts import get_object_or_404
+from .util import Instagram
 
 
 class CreateInstagramAccountViewSet(mixins.CreateModelMixin,
+                                    mixins.ListModelMixin,
                                     viewsets.GenericViewSet):
     queryset = InstagramAccount.objects.all()
     serializer_class = AuthCodeSerializer
@@ -21,21 +22,22 @@ class CreateInstagramAccountViewSet(mixins.CreateModelMixin,
         auth_code = serializer.validated_data['auth_code']
         user_id = self.kwargs.get('user_id')
 
-        sresponse = self.get_short_lived_token(auth_code)
+        inst = Instagram()
+        sresponse = inst.get_short_lived_token(auth_code)
         if sresponse.get('error_type'):
             return Response(sresponse, status=status.HTTP_400_BAD_REQUEST)
 
-        lresponse = self.get_long_lived_token(sresponse.get('access_token'))
+        lresponse = inst.get_long_lived_token(sresponse.get('access_token'))
         if lresponse.get('error'):
             return Response(lresponse.get('error'),
                 status=status.HTTP_400_BAD_REQUEST)
 
         model_serializer = InstagramAccountSerializer(data={
             'user': user_id,
-            'inst_user_id': sresponse.get('user_id'),
-            'long_lived_token': lresponse.get('access_token'),
+            'inst_user_id': sresponse['user_id'],
+            'long_lived_token': lresponse['access_token'],
             'expires_in': timezone.now() + \
-            timedelta(seconds=lresponse.get('expires_in'))
+            timedelta(seconds=lresponse['expires_in'])
         })
 
         if model_serializer.is_valid():
@@ -47,29 +49,10 @@ class CreateInstagramAccountViewSet(mixins.CreateModelMixin,
             return Response(model_serializer.errors,
                             status=status.HTTP_400_BAD_REQUEST)
 
+    def list(self, request, user_id):
+        account = get_object_or_404(InstagramAccount, pk=user_id)
+        token = account.long_lived_token
+        inst = Instagram()
+        imgs = inst.get_recent_images(token)
 
-    def get_short_lived_token(self, auth_code):
-        """exchanges auth_code for short lived token"""
-
-        r = requests.post(settings.INSTAGRAM_STOKEN_URI, {
-            'client_id': settings.INSTAGRAM_APP_ID,
-            'client_secret': settings.INSTAGRAM_SECRET,
-            'grant_type': 'authorization_code',
-            'redirect_uri': settings.INSTAGRAM_REDIRECT_URI,
-            'code': auth_code
-        })
-
-        return r.json()
-
-    def get_long_lived_token(self, short_lived_token):
-        """a method to exchange `short_lived_token` for long lived one"""
-
-        uri = settings.INSTAGRAM_ROOT_URI + '/access_token'
-
-        r = requests.get(uri, {
-            'client_secret': settings.INSTAGRAM_SECRET,
-            'access_token': short_lived_token,
-            'grant_type': 'ig_exchange_token'
-        })
-
-        return r.json()
+        return Response(imgs, status=status.HTTP_200_OK)
