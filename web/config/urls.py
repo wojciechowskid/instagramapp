@@ -18,7 +18,7 @@ from django.urls import path, include
 from instagram import views
 from rest_framework.routers import DefaultRouter
 from users.api import (UserViewSet)
-from instagram.api import CreateInstagramAccountViewSet
+from instagram.api import CreateInstagramAccountViewSet, delete_data
 
 
 router = DefaultRouter()
@@ -34,5 +34,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth-window/', views.view),
     path('api/users/<int:user_id>/instagram/', instagram_view),
+    path('instagram/delete/', delete_data),
     path('', include(router.urls)),
 ]

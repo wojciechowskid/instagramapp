@@ -70,7 +70,7 @@ class CreateInstagramAccountViewSet(mixins.CreateModelMixin,
 @api_view(['POST'])
 def delete_data(request):
     if request.method == 'POST':
-        signed_data = request.data.get('signed_data')
+        signed_request = request.data.get('signed_request')
 
         inst = Instagram()
         try:
@@ -80,7 +80,7 @@ def delete_data(request):
             for account in accounts:
                 account.delete()
         except (ValueError, KeyError) as err:
-            return Response({'error': err},
+            return Response({'error': str(err)},
                             status=status.HTTP_400_BAD_REQUEST)
         except InstagramAccount.DoesNotExists:
             pass
